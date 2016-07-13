@@ -1,4 +1,4 @@
-package com.github.dwendelen.couchbasespringmigration;
+package com.github.dwendelen.couchbase_spring_migration;
 
 public enum MigrationStatus {
     RUNNING,

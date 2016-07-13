@@ -1,10 +1,10 @@
-package com.github.dwendelen.couchbasespringmigration.impl;
+package com.github.dwendelen.couchbase_spring_migration.impl;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
-import com.github.dwendelen.couchbasespringmigration.Migration;
-import com.github.dwendelen.couchbasespringmigration.MigrationTiming;
+import com.github.dwendelen.couchbase_spring_migration.Migration;
+import com.github.dwendelen.couchbase_spring_migration.MigrationTiming;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextStartedEvent;
