@@ -1,6 +1,6 @@
-package migration;
+package com.github.dwendelen.couchbasespringmigration;
 
-import migration.impl.MigrationConfiguration;
+import com.github.dwendelen.couchbasespringmigration.impl.MigrationConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

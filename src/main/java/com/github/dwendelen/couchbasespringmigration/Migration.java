@@ -1,4 +1,4 @@
-package migration;
+package com.github.dwendelen.couchbasespringmigration;
 
 import java.util.List;
 
