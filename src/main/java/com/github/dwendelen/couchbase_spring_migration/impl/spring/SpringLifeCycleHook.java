@@ -26,6 +26,6 @@ public class SpringLifeCycleHook implements ApplicationListener<ContextStartedEv
 
     @Override
     public void onApplicationEvent(ContextStartedEvent event) {
-        migrator.migrate(MigrationTiming.DURING_STARTUP);
+        migrator.migrate(MigrationTiming.DURING_RUNTIME);
     }
 }

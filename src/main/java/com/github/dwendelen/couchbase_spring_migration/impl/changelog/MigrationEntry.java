@@ -35,4 +35,8 @@ public class MigrationEntry {
         setStatus(MigrationStatus.RUNNING);
         entry.put("start", getNowAsString());
     }
+
+    public void markAsFailed() {
+        setStatus(MigrationStatus.FAILED);
+    }
 }

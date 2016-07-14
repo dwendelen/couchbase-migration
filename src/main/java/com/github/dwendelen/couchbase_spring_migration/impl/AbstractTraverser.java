@@ -13,34 +13,38 @@ public abstract class AbstractTraverser {
     }
 
     protected abstract MigrationStatus getStatus();
-    protected abstract void setStatus(MigrationStatus failed);
+    public abstract void markAsFailed();
 
-    public void traverse(boolean waitForOtherRunningMigrations, boolean failIfNotAllSuccessfull) {
+    public void traverse(TraverseConfiguration traverseConfiguration) {
         if(getStatus() == MigrationStatus.SUCCESS) {
             return;
         }
 
         boolean allDependenciesSucceeded = true;
+        boolean hasFailedDependencies = false;
 
         for (MigrationTraverser dependency : dependencies) {
             if(dependency.getStatus() == MigrationStatus.NOT_STARTED) {
-                dependency.traverse(waitForOtherRunningMigrations, failIfNotAllSuccessfull);
+                dependency.traverse(traverseConfiguration);
             }
+            //TRAVERSING DEEPER MUST BE DONE BEFORE CHECKING RESULT
             if(dependency.getStatus() == MigrationStatus.RUNNING) {
-                if(waitForOtherRunningMigrations) {
-                    dependency.waitForCompletion();
-                }
+                traverseConfiguration.onRunningMigration(this, dependency);
             }
+            //CHECKING RESULT MUST BE DONE AFTER THE DEPENDENCY HAD A CHANCE TO COMPLETE
             if(dependency.getStatus() != MigrationStatus.SUCCESS) {
                 allDependenciesSucceeded = false;
+            }
+            if(dependency.getStatus() == MigrationStatus.FAILED) {
+                hasFailedDependencies = true;
             }
         }
 
         if(allDependenciesSucceeded) {
             selfTraverse();
         } else {
-            if(failIfNotAllSuccessfull) {
-                this.setStatus(MigrationStatus.FAILED);
+            if(hasFailedDependencies) {
+                markAsFailed();
             }
         }
     }

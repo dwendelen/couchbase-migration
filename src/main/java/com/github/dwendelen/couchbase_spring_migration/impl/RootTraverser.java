@@ -11,12 +11,12 @@ public class RootTraverser extends AbstractTraverser {
     }
 
     @Override
-    protected void setStatus(MigrationStatus status) {
-        this.status = status;
+    public void markAsFailed() {
+        status = MigrationStatus.FAILED;
     }
 
     @Override
     protected void selfTraverse() {
-        setStatus(MigrationStatus.SUCCESS);
+        status = MigrationStatus.SUCCESS;
     }
 }

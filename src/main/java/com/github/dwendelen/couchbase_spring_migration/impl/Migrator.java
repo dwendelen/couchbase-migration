@@ -1,6 +1,7 @@
 package com.github.dwendelen.couchbase_spring_migration.impl;
 
 import com.github.dwendelen.couchbase_spring_migration.Migration;
+import com.github.dwendelen.couchbase_spring_migration.MigrationFailedException;
 import com.github.dwendelen.couchbase_spring_migration.MigrationStatus;
 import com.github.dwendelen.couchbase_spring_migration.MigrationTiming;
 import com.github.dwendelen.couchbase_spring_migration.impl.changelog.Changelog;
@@ -13,7 +14,7 @@ import java.util.*;
 public class Migrator {
     private Changelog changelog;
 
-    private Set<MigrationTraverser> migrations = new HashSet<>();
+    private Collection<MigrationTraverser> migrations;
 
     @Autowired
     public Migrator(Changelog changelog) {
@@ -31,11 +32,13 @@ public class Migrator {
             for (String dependencyName : dependent.getMigration().getDependencies()) {
                 MigrationTraverser dependency = migrationMap.get(dependencyName);
                 if(dependency == null) {
-                    throw new UnsupportedOperationException("Unkown dependency. Unkown dependencies are unsupported at this moment, could be solved with a NullMigration");
+                    throw new MigrationFailedException("Unkown dependency. Unkown dependencies are unsupported at this moment, could be solved with a NullMigration");
                 }
                 dependent.addDependency(dependency);
             }
         }
+
+        this.migrations = migrationMap.values();
     }
 
     public void migrate(MigrationTiming timing) {
@@ -43,11 +46,11 @@ public class Migrator {
 
         changelog.fetch();
 
-        rootTraverser.traverse(false, false);
-        rootTraverser.traverse(true, true);
+        rootTraverser.traverse(TraverseConfiguration.FAST_PATH);
+        rootTraverser.traverse(TraverseConfiguration.COMPLETE_PATH);
 
         if(rootTraverser.getStatus() == MigrationStatus.FAILED) {
-            throw new RuntimeException("At least one migration failed");
+            throw new MigrationFailedException("At least one migration failed");
         }
     }
 

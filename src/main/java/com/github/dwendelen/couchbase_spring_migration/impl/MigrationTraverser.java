@@ -22,8 +22,11 @@ public class MigrationTraverser extends AbstractTraverser {
         return getMigrationEntry().getStatus();
     }
 
-    public void setStatus(MigrationStatus status) {
-        getMigrationEntry().setStatus(status);
+    @Override
+    public void markAsFailed() {
+        this.changelog.fetchAndlock();
+        getMigrationEntry().markAsFailed();
+        this.changelog.saveAndReleaseLock();
     }
 
     protected void selfTraverse() {
