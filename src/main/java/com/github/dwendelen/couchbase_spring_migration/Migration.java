@@ -6,7 +6,7 @@ public interface Migration {
     String getIdentifier();
     MigrationTiming getMigrationTiming();
     List<String> getDependencies();
-    void start();
+    void migrate();
 
     /**
      * Must be determined stateless
